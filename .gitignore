@@ -30,7 +30,7 @@ logs/
 
 # Memory storage
 instance/memory/
-*.json
+# *.json removed to allow vercel.json
 
 # Testing
 .pytest_cache/
