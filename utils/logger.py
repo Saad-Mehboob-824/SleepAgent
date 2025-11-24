@@ -54,26 +54,29 @@ def setup_logger(name='sleep_optimizer_agent', log_file=None, level=None):
     if logger.handlers:
         return logger
     
-    # Create logs directory if it doesn't exist
-    if log_file:
-        log_dir = os.path.dirname(log_file)
-        if log_dir and not os.path.exists(log_dir):
-            os.makedirs(log_dir, exist_ok=True)
+    # Create logs directory if it doesn't exist (handled below)
+    # Redundant block removed
     
-    # File handler with rotation
+    # File handler with rotation (only if writable)
     file_path = log_file or Config.LOG_FILE
     if file_path:
-        file_dir = os.path.dirname(file_path)
-        if file_dir and not os.path.exists(file_dir):
-            os.makedirs(file_dir, exist_ok=True)
-        
-        file_handler = RotatingFileHandler(
-            file_path,
-            maxBytes=Config.LOG_MAX_BYTES,
-            backupCount=Config.LOG_BACKUP_COUNT
-        )
-        file_handler.setFormatter(JSONFormatter())
-        logger.addHandler(file_handler)
+        try:
+            file_dir = os.path.dirname(file_path)
+            if file_dir and not os.path.exists(file_dir):
+                os.makedirs(file_dir, exist_ok=True)
+            
+            file_handler = RotatingFileHandler(
+                file_path,
+                maxBytes=Config.LOG_MAX_BYTES,
+                backupCount=Config.LOG_BACKUP_COUNT
+            )
+            file_handler.setFormatter(JSONFormatter())
+            logger.addHandler(file_handler)
+        except OSError:
+            # Fallback for read-only file systems (like Vercel)
+            pass
+        except Exception as e:
+            print(f"Failed to setup file logging: {e}")
     
     # Console handler
     console_handler = logging.StreamHandler()
