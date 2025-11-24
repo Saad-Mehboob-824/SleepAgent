@@ -3,7 +3,7 @@ Short-Term Memory (STM) - Stores recent sleep sessions.
 """
 from datetime import datetime, timedelta
 from typing import Dict, Any, List, Optional
-from memory.storage import storage
+from .storage import storage
 from config import Config
 from utils.logger import logger
 

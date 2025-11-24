@@ -3,7 +3,7 @@ Long-Term Memory (LTM) - Stores trends, patterns, and user preferences.
 """
 from datetime import datetime, timedelta
 from typing import Dict, Any, Optional, List
-from memory.storage import storage
+from .storage import storage
 from config import Config
 from utils.logger import logger
 
